@@ -10,10 +10,9 @@ typedef struct {
    union {
      int v_int;
      void* v_ptr;
-   } valor;         /* define o valor ou endereÃ§o do parametro (amarrado) */
+   } valor;         /* define o valor ou endereco do parametro (amarrado) */
 } DescParam;
 
 void cria_func (void* f, DescParam params[], int n, unsigned char codigo[]);
 
 #endif
-
