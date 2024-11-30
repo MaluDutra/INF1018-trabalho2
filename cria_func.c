@@ -18,9 +18,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                                       {0xf0, 0xf1, 0xf2},  //mover %xsi para %r8, %r9 e %r10
                                       {0xd0, 0xd1, 0xd2}}; //mover %xdx para %r8, %r9 e %r10
 
-    unsigned char reg_fix_l[3] = {0xb8, 0xb9, 0xba}; //mover $x para %r8d, %r9d e %r10d
-
-    unsigned char reg_fix_q[3] = {0xc0, 0xc1, 0xc2}; //mover $x para %r8, %r9 e %r10
+    unsigned char reg_fix[3] = {0xb8, 0xb9, 0xba}; //mover $x para %r8x, %r9x e %r10x
   
     unsigned char reg_fix_ind[3] = {0x00, 0x09, 0x12}; //mover %(rx) para %r8, %r9 e %r10
 
@@ -53,7 +51,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 4 bytes
                 codigo[pos++] = 0x41;
-                codigo[pos++] = reg_fix_l[i];
+                codigo[pos++] = reg_fix[i];
 
                 inteiro.i = params[i].valor.v_int;
                 for (int aux = 0; aux < 4; aux++){
@@ -64,8 +62,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
             } else if (params[i].orig_val == IND){
                 //é um endereço que deve ser guardado -- 8 bytes
                 codigo[pos++] = 0x49;
-                codigo[pos++] = 0xc7;
-                codigo[pos++] = reg_fix_q[i];
+                codigo[pos++] = reg_fix[i];
 
                 ponteiro.p = params[i].valor.v_ptr;
                 for (int aux = 0; aux < 8; aux++){
@@ -87,8 +84,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 8 bytes
                 codigo[pos++] = 0x49;
-                codigo[pos++] = 0xc7;
-                codigo[pos++] = reg_fix_q[i];
+                codigo[pos++] = reg_fix[i];
 
                 ponteiro.p = params[i].valor.v_ptr;
                 for (int aux = 0; aux < 8; aux++){
@@ -99,8 +95,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
             } else if (params[i].orig_val == IND){
                 //é um endereço -- 8 bytes
                 codigo[pos++] = 0x49;
-                codigo[pos++] = 0xc7;
-                codigo[pos++] = reg_fix_q[i];
+                codigo[pos++] = reg_fix[i];
 
                 ponteiro.p = params[i].valor.v_ptr;
                 for (int aux = 0; aux < 8; aux++){
