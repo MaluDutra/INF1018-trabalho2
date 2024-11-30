@@ -6,12 +6,12 @@
 void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     union{ //para facilitar na hora de pegar e passar os valores dos inteiros
         int i;
-        char c[4]; //int -- 4 bytes
+        unsigned char c[4]; //int -- 4 bytes
     } inteiro;
 
     union{ //para facilitar na hora de pegar e passar os valores dos ponteiros
         void* p;
-        char c[8]; //ponteiro -- 8 bytes
+        unsigned char c[8]; //ponteiro -- 8 bytes
     } ponteiro;
 
     unsigned char reg_temp[3][3]={{0xf8, 0xf9, 0xfa}, //mover %xdi para %r8, %r9 e %r10
@@ -19,6 +19,11 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                                       {0xd0, 0xd1, 0xd2}}; //mover %xdx para %r8, %r9 e %r10
 
     unsigned char reg_fix_l[3] = {0xb8, 0xb9, 0xba}; //mover $x para %r8d, %r9d e %r10d
+
+    unsigned char reg_fix_ind_l[3] = {}; //!!!!!!!!!!!!!!
+    
+    unsigned char reg_fix_ind_q[3] = {}; //!!!!!!!!!!!!!!
+
     //início
     int pos = 0;
 
@@ -54,7 +59,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
             } else if (params[i].orig_val == IND){
                 //é um endereço que deve ser guardado -- 8 bytes
-                //nsei de jeito nenhum ainda
+                //movl (%xx), %rx
 
             }
 
@@ -72,7 +77,8 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
             } else if (params[i].orig_val == IND){
                 //é um endereço -- 8 bytes
-                //nsei de jeito nenhum ainda
+                //movl (%xx), %rx
+
 
 
             }
