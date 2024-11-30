@@ -24,6 +24,10 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     
     unsigned char reg_fix_ind_q[3] = {}; //!!!!!!!!!!!!!!
 
+    unsigned char reg_final[3] = {0xc7, //mover %r8 para %xdi
+                                  0xce, //mover %r9 para %xsi
+                                  0xd3};//mover %r10 para %xdx
+
     //início
     int pos = 0;
 
@@ -38,13 +42,14 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     //xsi --> r9
     //xdx --> r10
     int aux_param = 0;
-    for (int i = 0; i < n; i++, aux_param++){ 
+    for (int i = 0; i < n; i++){ 
         if (params[i].tipo_val == INT_PAR){ //parâmetro é um inteiro
             if (params[i].orig_val == PARAM){
                 //é um parâmetro não amarrado -- 4 bytes
                 codigo[pos++] = 0x41;
                 codigo[pos++] = 0x89;
                 codigo[pos++] = reg_temp[aux_param][i];
+                aux_param++;
 
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 4 bytes
@@ -69,6 +74,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                 codigo[pos++] = 0x49;
                 codigo[pos++] = 0x89;
                 codigo[pos++] = reg_temp[aux_param][i];
+                aux_param++;
 
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 8 bytes
@@ -83,6 +89,24 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
             }
         }
+    }
+
+    for (int i = 0; i < n; i++){ //alocando nas posições de parâmetros
+        if (params[i].tipo_val == INT_PAR){ //parâmetro é um inteiro
+            codigo[pos++] = 0x44;
+        }
+        else { //parâmetro é um ponteiro
+            codigo[pos++] = 0x4c;   
+        }
+        codigo[pos++] = 0x89;
+        codigo[pos++] = reg_final[i];
+    }
+
+    codigo[pos++] = 0x48; //mov %rax
+    codigo[pos++] = 0xb8;
+    ponteiro.p = f;
+    for (int aux = 0; aux < 8; aux++){
+        codigo[pos++] = ponteiro.c[aux];
     }
 
     //call *%rax
