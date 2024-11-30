@@ -21,9 +21,13 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     unsigned char reg_fix_l[3] = {0xb8, 0xb9, 0xba}; //mover $x para %r8d, %r9d e %r10d
 
     unsigned char reg_fix_q[3] = {0xc0, 0xc1, 0xc2}; //mover $x para %r8, %r9 e %r10
-
+  
     unsigned char reg_fix_ind[3] = {0x00, 0x09, 0x12}; //mover %(rx) para %r8, %r9 e %r10
-    
+
+    unsigned char reg_final[3] = {0xc7, //mover %r8 para %xdi
+                                  0xce, //mover %r9 para %xsi
+                                  0xd3};//mover %r10 para %xdx
+
     //início
     int pos = 0;
 
@@ -108,6 +112,24 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                 codigo[pos++] = reg_fix_ind[i];
             }
         }
+    }
+
+    for (int i = 0; i < n; i++){ //alocando nas posições de parâmetros
+        if (params[i].tipo_val == INT_PAR){ //parâmetro é um inteiro
+            codigo[pos++] = 0x44;
+        }
+        else { //parâmetro é um ponteiro
+            codigo[pos++] = 0x4c;   
+        }
+        codigo[pos++] = 0x89;
+        codigo[pos++] = reg_final[i];
+    }
+
+    codigo[pos++] = 0x48; //mov %rax
+    codigo[pos++] = 0xb8;
+    ponteiro.p = f;
+    for (int aux = 0; aux < 8; aux++){
+        codigo[pos++] = ponteiro.c[aux];
     }
 
     //call *%rax
