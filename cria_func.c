@@ -20,10 +20,10 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
     unsigned char reg_fix_l[3] = {0xb8, 0xb9, 0xba}; //mover $x para %r8d, %r9d e %r10d
 
-    unsigned char reg_fix_ind_l[3] = {}; //!!!!!!!!!!!!!!
-    
-    unsigned char reg_fix_ind_q[3] = {}; //!!!!!!!!!!!!!!
+    unsigned char reg_fix_q[3] = {0xc0, 0xc1, 0xc2}; //mover $x para %r8, %r9 e %r10
 
+    unsigned char reg_fix_ind[3] = {0x00, 0x09, 0x12}; //mover %(rx) para %r8, %r9 e %r10
+    
     //início
     int pos = 0;
 
@@ -38,13 +38,13 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     //xsi --> r9
     //xdx --> r10
     int aux_param = 0;
-    for (int i = 0; i < n; i++, aux_param++){ 
+    for (int i = 0; i < n; i++){ 
         if (params[i].tipo_val == INT_PAR){ //parâmetro é um inteiro
             if (params[i].orig_val == PARAM){
                 //é um parâmetro não amarrado -- 4 bytes
                 codigo[pos++] = 0x41;
                 codigo[pos++] = 0x89;
-                codigo[pos++] = reg_temp[aux_param][i];
+                codigo[pos++] = reg_temp[aux_param++][i];
 
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 4 bytes
@@ -59,8 +59,18 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
             } else if (params[i].orig_val == IND){
                 //é um endereço que deve ser guardado -- 8 bytes
-                //movl (%xx), %rx
+                codigo[pos++] = 0x49;
+                codigo[pos++] = 0xc7;
+                codigo[pos++] = reg_fix_q[i];
 
+                ponteiro.p = params[i].valor.v_ptr;
+                for (int aux = 0; aux < 8; aux++){
+                    codigo[pos++] = ponteiro.c[aux];
+                }
+
+                codigo[pos++] = 0x45;
+                codigo[pos++] = 0x8b;
+                codigo[pos++] = reg_fix_ind[i];
             }
 
         } else{ //parâmetro é um ponteiro
@@ -68,19 +78,34 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                 //é um parâmetro não amarrado -- 8 bytes
                 codigo[pos++] = 0x49;
                 codigo[pos++] = 0x89;
-                codigo[pos++] = reg_temp[aux_param][i];
+                codigo[pos++] = reg_temp[aux_param++][i];
 
             } else if (params[i].orig_val == FIX){
                 //é um parâmetro fixo -- 8 bytes
-                //nsei de jeito nenhum ainda
+                codigo[pos++] = 0x49;
+                codigo[pos++] = 0xc7;
+                codigo[pos++] = reg_fix_q[i];
+
+                ponteiro.p = params[i].valor.v_ptr;
+                for (int aux = 0; aux < 8; aux++){
+                    codigo[pos++] = ponteiro.c[aux];
+                }
 
 
             } else if (params[i].orig_val == IND){
                 //é um endereço -- 8 bytes
-                //movl (%xx), %rx
+                codigo[pos++] = 0x49;
+                codigo[pos++] = 0xc7;
+                codigo[pos++] = reg_fix_q[i];
 
+                ponteiro.p = params[i].valor.v_ptr;
+                for (int aux = 0; aux < 8; aux++){
+                    codigo[pos++] = ponteiro.c[aux];
+                }
 
-
+                codigo[pos++] = 0x4d;
+                codigo[pos++] = 0x8b;
+                codigo[pos++] = reg_fix_ind[i];
             }
         }
     }
