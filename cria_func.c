@@ -24,7 +24,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
 
     unsigned char reg_final[3] = {0xc7, //mover %r8 para %xdi
                                   0xce, //mover %r9 para %xsi
-                                  0xd3};//mover %r10 para %xdx
+                                  0xd2};//mover %r10 para %xdx
 
     //início
     int pos = 0;
@@ -57,7 +57,6 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                 for (int aux = 0; aux < 4; aux++){
                     codigo[pos++] = inteiro.c[aux];
                 }
-
 
             } else if (params[i].orig_val == IND){
                 //é um endereço que deve ser guardado -- 8 bytes

@@ -38,7 +38,13 @@ Disassembly of section .text:
   69:	49 89 d2             	mov    %rdx,%r10
   6c:	4d 8b 12             	mov    (%r10),%r10
   6f:	49 c7 c2 ff ff ff ff 	mov    $0xffffffffffffffff,%r10
-  76:	48 89 f8             	mov    %rdi,%rax
-  79:	ff d0                	call   *%rax
-  7b:	c9                   	leave
-  7c:	c3                   	ret
+  76:	44 89 c7             	mov    %r8d,%edi
+  79:	4c 89 c7             	mov    %r8,%rdi
+  7c:	44 89 ce             	mov    %r9d,%esi
+  7f:	4c 89 ce             	mov    %r9,%rsi
+  82:	44 89 d2             	mov    %r10d,%edx
+  85:	4c 89 d2             	mov    %r10,%rdx
+  88:	48 89 f8             	mov    %rdi,%rax
+  8b:	ff d0                	call   *%rax
+  8d:	c9                   	leave
+  8e:	c3                   	ret

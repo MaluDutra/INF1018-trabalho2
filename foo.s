@@ -41,6 +41,15 @@ foo:
    movq (%r10), %r10
    movq $0xFFFFFFFFFFFFFFFF, %r10 /*não entendi*/
 
+   movl %r8d, %edi
+   movq %r8, %rdi
+ 
+   movl %r9d, %esi
+   movq %r9, %rsi
+      
+   movl %r10d, %edx
+   movq %r10, %rdx
+
    movq %rdi, %rax
    call *%rax
    
