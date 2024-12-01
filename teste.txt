@@ -1,0 +1,10 @@
+2 == 2 --> igual!
+4 == 4 --> igual!
+6 == 6 --> igual!
+8 == 8 --> igual!
+10 == 10 --> igual!
+12 == 12 --> igual!
+14 == 14 --> igual!
+16 == 16 --> igual!
+18 == 18 --> igual!
+20 == 20 --> igual!
