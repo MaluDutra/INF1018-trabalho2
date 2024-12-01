@@ -3,6 +3,14 @@
 #include <stdio.h>
 #include "cria_func.h"
 
+/**
+ * Esta função insere no vetor recebido o código de máquina gerado dinamicamente para a "nova versão" de uma função,
+ * mapeando os parãmetros de maneira correta para serem passados para a função original que será a chamada.
+ * @param f Endereço da função original
+ * @param params Vetor que contém a descrição dos parãmetros que a função original irá receber
+ * @param n Inteiro com o valor da quantidade total de parãmetros que estão descritos no vetor params
+ * @param codigo Vetor de unsigned char no qual será inserido os códigos de máquina gerados para a nova função
+ */
 void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
     union{ //para facilitar na hora de pegar e passar os valores dos inteiros
         int i;
@@ -68,6 +76,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                     codigo[pos++] = ponteiro.c[aux];
                 }
 
+                //mover o conteúdo do endereço -- 4 bytes
                 codigo[pos++] = 0x45;
                 codigo[pos++] = 0x8b;
                 codigo[pos++] = reg_fix_ind[i];
@@ -101,6 +110,7 @@ void cria_func(void* f, DescParam params[], int n, unsigned char codigo[]){
                     codigo[pos++] = ponteiro.c[aux];
                 }
 
+                //mover o conteúdo do endereço -- 8 bytes
                 codigo[pos++] = 0x4d;
                 codigo[pos++] = 0x8b;
                 codigo[pos++] = reg_fix_ind[i];
