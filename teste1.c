@@ -38,7 +38,9 @@ int main (void) {
   f_mult = (func_ptr) codigo;   
 
   for (i = 1; i <=10; i++) {
-    printf("%d\n", f_mult(i, i)); 
+    if (mult(1, i, i) == f_mult(i, i)){
+      printf("%d == %d --> igual!\n",mult(1, i, i), f_mult(i, i)); 
+    }
   }
 
   return 0;
